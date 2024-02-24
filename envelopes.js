@@ -60,12 +60,16 @@ const generateNewEnvelope = (name, budget) => {
 }
 
 //Get index in envelope array that matches either a name or id search.
-const getEnvelopeIndex = (key, arr) => {
+const getEnvelopeIndex = (key, arr, retEnv = false) => {
     let envIdType
     if (Number(key)) {
         envIdType = 'id'
     } else {
         envIdType = 'name'
+    }
+
+    if (retEnv) {
+        return arr.find((elem) => elem[envIdType] == key)
     }
 
     return arr.findIndex((elem) => elem[envIdType] == key)
