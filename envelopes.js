@@ -1,8 +1,16 @@
 class Envelope {
     constructor (name, budget) {
+        this.id = Envelope.nextId
         this.name = name
         this.budget = budget
         this.remaining = budget
+
+        Envelope.incrementId()
+    }
+
+    static nextId = 1
+    static incrementId () {
+        this.nextId += 1
     }
 
     static calculateAssignedBudget (arr) {
@@ -14,10 +22,22 @@ class Envelope {
 
     rename (newName) {
         this.name = newName
+        return this
     }
 
     spend (amount) {
-        this.remaining = this.remaining - amount
+        this.remaining = this.remaining - Number(amount)
+        return this
+    }
+
+    adjustBudget (newBudget) {
+        this.budget = newBudget
+        return this
+    }
+
+    adjustRemaining (newRemaining) {
+        this.remaining = newRemaining
+        return this
     }
 }
 
@@ -39,8 +59,16 @@ const generateNewEnvelope = (name, budget) => {
     return new Envelope(name, budget)
 }
 
-const getEnvelopeIndex = (envName, arr) => {
-    return arr.findIndex((elem) => elem.name == envName)
+//Get index in envelope array that matches either a name or id search.
+const getEnvelopeIndex = (key, arr) => {
+    let envIdType
+    if (Number(key)) {
+        envIdType = 'id'
+    } else {
+        envIdType = 'name'
+    }
+
+    return arr.findIndex((elem) => elem[envIdType] == key)
 }
 
 module.exports = { seedEnvelopes, generateNewEnvelope, getEnvelopeIndex }
