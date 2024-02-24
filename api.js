@@ -29,6 +29,17 @@ api.post('/', (req, res, next) => {
     res.status(201).send(newEnvelope)
 })
 
+api.post('/transfer/:from/:to', (req, res, next) => {
+    const fromEnv = getEnvelopeIndex(req.params.from, envelopes, true)
+    const toEnv = getEnvelopeIndex(req.params.to, envelopes, true)
+    const transferAmount = req.query.amount
+
+    fromEnv.spend(transferAmount)
+    toEnv.spend(-transferAmount)
+    
+    res.status(200).send([fromEnv, toEnv])
+})
+
 api.put('/:envName/:spent', (req, res, next) => {
     const updatedEnv = req.envelope.spend(req.params.spent)
     res.status(200).send(updatedEnv)
